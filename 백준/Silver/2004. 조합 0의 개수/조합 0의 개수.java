@@ -10,8 +10,9 @@ public class Main {
 
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-
-        System.out.println(Math.min(divide5(N) - (divide5(M) + divide5(N-M)), divide2(N) - (divide2(M) + divide2(N-M))));
+        int countN =divide5(N) - (divide5(M) + divide5(N-M));
+        int countM =divide2(N) - (divide2(M) + divide2(N-M));
+        System.out.println(Math.min(countN,countM));
     }
     public static int divide5(int n){
         int cnt = 0;
