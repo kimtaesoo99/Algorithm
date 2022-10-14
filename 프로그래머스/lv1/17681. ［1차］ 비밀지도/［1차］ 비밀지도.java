@@ -10,7 +10,7 @@ public class Solution {
             if (first.length()<n){
                 String empty="";
                 for (int k=0;k<n-first.length();k++){
-                    empty += " ";
+                    empty += "0";
                 }
                 first = empty+first;
             }
@@ -18,7 +18,7 @@ public class Solution {
             if (second.length()<n){
                 String empty="";
                 for (int k=0;k<n-second.length();k++){
-                    empty += " ";
+                    empty += "0";
                 }
                 second = empty+second;
             }
