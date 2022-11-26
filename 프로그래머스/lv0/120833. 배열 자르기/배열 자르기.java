@@ -1,12 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 class Solution {
-    public List<Integer> solution(int[] numbers, int num1, int num2) {
-        List<Integer> list = new ArrayList<>();
-        for (int i = num1; i <= num2; i++) {
-            list.add(numbers[i]);
-        }
-        return list;
+    public int[] solution(int[] numbers, int num1, int num2) {
+        return Arrays.copyOfRange(numbers,num1,num2+1);
     }
 }
