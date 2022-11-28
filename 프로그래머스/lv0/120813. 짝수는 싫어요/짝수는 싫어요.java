@@ -1,12 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.IntStream;
 
 class Solution {
-    public List<Integer> solution(int n) {
-        List<Integer> list = new ArrayList<>();
-        for (int i = 1; i <= n; i = i + 2) {
-            list.add(i);
-        }
-        return list;
+    public int[] solution(int n) {
+        return IntStream.rangeClosed(1, n).filter(i -> i % 2 == 1).toArray();
     }
 }
