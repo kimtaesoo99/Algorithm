@@ -1,10 +1,11 @@
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 class Solution {
     public int solution(String[] s1, String[] s2) {
-        int answer = 0;
-        for (String  str : s2){
-            if (Arrays.stream(s1).anyMatch(i -> i.equals(str)))answer++;
-        }
-        return answer;
+        Set<String> set = new HashSet<>(List.of(s1));
+        return (int)Arrays.stream(s2).filter(set::contains).count();
     }
 }
