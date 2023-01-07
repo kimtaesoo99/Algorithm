@@ -35,11 +35,7 @@ class Solution {
         for (int i = 0; i<4;i++){
             int first = map.getOrDefault(mbti[2*i],0);
             int second = map.getOrDefault(mbti[2*i+1],0);
-            if (first==second){
-                sb.append(mbti[2*i]);
-                continue;
-            }
-            String result = first>second?mbti[2*i]:mbti[2*i+1];
+            String result = first>=second?mbti[2*i]:mbti[2*i+1];
             sb.append(result);
         }
         return sb.toString();
