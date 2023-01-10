@@ -6,15 +6,10 @@ class Solution {
         PriorityQueue<Integer> queue = new PriorityQueue<>();
         Arrays.stream(scoville).forEach(queue::offer);
         int count = 0;
-        while (true){
-            Integer min = queue.poll();
-            Integer secondMin = queue.poll();
-            if (min == null)return -1;
-            if (min>=K)break;
-            if (secondMin == null) return -1;
-            queue.offer(min + secondMin*2);
+        while (queue.size()>1 && queue.peek()<K){
+            queue.offer(queue.poll() + queue.poll()*2);
             count++;
         }
-        return count;
+        return queue.peek() >= K ?count:-1;
     }
 }
