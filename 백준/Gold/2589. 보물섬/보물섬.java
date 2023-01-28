@@ -5,7 +5,6 @@ import java.util.Scanner;
 class Main{
     static int[][] result;
     static char[][] map;
-    static boolean[][] visited;
     static int[] dy ={1,0,-1,0};
     static int[] dx ={0,-1,0,1};
     static int N;
@@ -27,7 +26,6 @@ class Main{
             for (int j = 0; j < M; j++){
                 if (map[i][j] =='L'){
                     result = new int[N][M];
-                    visited = new boolean[N][M];
                     getResult(i,j);
                 }
             }
@@ -38,8 +36,7 @@ class Main{
     static void getResult(int y, int x){
         Queue<int[]> queue = new LinkedList<>();
         queue.offer(new int[]{y,x});
-        result[y][x] = 0;
-        visited[y][x] = true;
+        result[y][x] = 1;
 
         while (!queue.isEmpty()) {
             int[] move = queue.poll();
@@ -49,11 +46,10 @@ class Main{
                 int moveX = move[1] + dx[i];
 
                 if (0<=moveY && moveY <N && 0<=moveX && moveX <M){
-                    if (map[moveY][moveX]=='L' && !visited[moveY][moveX]){
+                    if (map[moveY][moveX]=='L' && result[moveY][moveX]==0){
                         queue.add(new int[]{moveY, moveX});
-                        visited[moveY][moveX] = true;
                         result[moveY][moveX] = result[move[0]][move[1]]+1;
-                        max = Math.max(max, result[moveY][moveX]);
+                        max = Math.max(max, result[moveY][moveX]-1);
                     }
                 }
             }
