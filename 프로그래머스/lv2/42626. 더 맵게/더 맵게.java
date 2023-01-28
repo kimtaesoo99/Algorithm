@@ -1,15 +1,21 @@
-import java.util.Arrays;
 import java.util.PriorityQueue;
 
 class Solution {
     public int solution(int[] scoville, int K) {
+        int answer = 0;
         PriorityQueue<Integer> queue = new PriorityQueue<>();
-        Arrays.stream(scoville).forEach(queue::offer);
-        int count = 0;
-        while (queue.size()>1 && queue.peek()<K){
-            queue.offer(queue.poll() + queue.poll()*2);
-            count++;
+        for (int i : scoville) {
+            queue.add(i);
         }
-        return queue.peek() >= K ?count:-1;
+        while (queue.size()<2||queue.peek()<=K){
+            Integer a = queue.poll();
+            Integer b = queue.poll();
+            if (a==null)return -1;
+            if (a>=K)return answer;
+            if (b==null)return -1;
+            queue.offer(a+b*2);
+            answer++;
+        }
+        return answer;
     }
 }
