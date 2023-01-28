@@ -1,22 +1,11 @@
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class Solution {
     public String solution(int[] numbers) {
-        String[] str = new String[numbers.length];
-        for (int i = 0; i <str.length;i++){
-            str[i] = String.valueOf(numbers[i]);
-        }
-        Arrays.sort(str, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return (o2+o1).compareTo(o1+o2);
-            }
-        });
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length; i++){
-            sb.append(str[i]);
-        }
-        return sb.charAt(0)=='0'?"0":sb.toString();
+        List<String> result = Arrays.stream(numbers).mapToObj(String::valueOf)
+                .sorted((s1, s2) -> (s2 + s1).compareTo(s1 + s2)).collect(Collectors.toList());
+        return result.get(0).equals("0")?"0": String.join("", result);
     }
 }
