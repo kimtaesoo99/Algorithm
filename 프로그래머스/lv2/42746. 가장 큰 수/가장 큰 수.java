@@ -3,11 +3,9 @@ import java.util.Comparator;
 
 class Solution {
     public String solution(int[] numbers) {
-        boolean onlyZero = true;
         String[] str = new String[numbers.length];
         for (int i = 0; i <str.length;i++){
             str[i] = String.valueOf(numbers[i]);
-            if (numbers[i]!=0)onlyZero = false;
         }
         Arrays.sort(str, new Comparator<String>() {
             @Override
@@ -19,14 +17,6 @@ class Solution {
         for (int i = 0; i < str.length; i++){
             sb.append(str[i]);
         }
-        if (onlyZero) return "0";
-        return sb.toString();
-    }
-}
-
-class Play{
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        System.out.println(solution.solution(new int[]{6,10,2}));
+        return sb.charAt(0)=='0'?"0":sb.toString();
     }
 }
