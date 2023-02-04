@@ -1,33 +1,24 @@
-import java.util.*;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 
-
-class Main{
+public class Main {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        Queue<Integer> q = new PriorityQueue<>(new Comparator() {
-
-            @Override
-            public int compare(Object o1, Object o2) {
-                if (Math.abs((Integer) o1)==Math.abs((Integer) o2)){
-                    return ((Integer) o1).compareTo((Integer) o2);
-                }
-                return Math.abs((Integer) o1)-Math.abs((Integer) o2);
-            }
-        });
+        int n = sc.nextInt();
         StringBuilder sb = new StringBuilder();
-        int N = sc.nextInt();
-        for (int i =0; i< N; i++){
-            int value = sc.nextInt();
-            if (value == 0 && q.isEmpty()) {
-                sb.append(0).append("\n");
-            } else if (value == 0 && !q.isEmpty()) {
-                sb.append(q.poll()).append("\n");
-            } else {
-                q.add(value);
-            }
+        PriorityQueue<Integer> queue = new PriorityQueue<>((o1, o2) -> {
+            int abs1 = Math.abs(o1);
+            int abs2 = Math.abs(o2);
+            if(abs1 == abs2) return o1-o2;
+            return abs1 - abs2;
+        });
+        for(int i = 0 ; i < n; i++){
+            int val = sc.nextInt();
+            if(val == 0){
+                if (queue.isEmpty()) sb.append(0).append("\n");
+                else sb.append(queue.poll()).append("\n");
+            }else queue.add(val);
         }
         System.out.println(sb);
     }
-
 }
-
