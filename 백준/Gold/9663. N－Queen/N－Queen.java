@@ -1,32 +1,35 @@
-import java.util.Scanner;
+import java.util.*;
 
-public class Main {
-    public static int N;
-    public static int[] arr;
-    public static int count;
-    public static void main(String[] args) {
+class Main{
+    static int[] chess;
+    static int count = 0;
+    public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        N =sc.nextInt();
-        arr = new int[N];
-        chess(0);
+        int N = sc.nextInt();
+        chess = new int[N];
+
+        getResult(0);
         System.out.println(count);
     }
-    public static void chess(int depth){
-        if (depth == N){
+
+    public static void getResult(int y){
+        if(y == chess.length){
             count++;
             return;
         }
-        for (int i=0;i<N; i++){
-            arr[depth]=i;
-            if(possible(depth)){
-                chess(depth+1);
+        for(int i = 0; i< chess.length; i++){
+            chess[y] = i;
+            if(canSet(y)){
+                getResult(y+1);
             }
         }
     }
-    public static boolean possible(int col){
-        for (int i=0;i<col; i++){
-            if(arr[col]==arr[i])return false;
-            else if(Math.abs(col-i)==Math.abs(arr[col]-arr[i]))return false;
+
+    public static boolean canSet(int y){
+        for(int i = 0; i < y; i++){
+            if(chess[i] == chess[y])return false;
+            else if(Math.abs(y - i) == Math.abs(chess[y]- chess[i]))return false;
+
         }
         return true;
     }
