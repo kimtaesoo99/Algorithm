@@ -1,37 +1,36 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
 
 public class Main {
-	public static int[] arr;
-	public static StringBuilder sb = new StringBuilder();
+    static int N;
+    static int M;
+    static int[] result;
+    static StringBuilder sb;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] num = br.readLine().split(" ");
+        N = Integer.parseInt(num[0]);
+        M = Integer.parseInt(num[1]);
+        result = new int[M];
+        sb = new StringBuilder();
+        getResult(0, -1);
+        System.out.println(sb);
+    }
 
-		arr = new int[M];
-		btm(N, M, 0);
-		System.out.println(sb);
-	}
+    public static void getResult(int index, int pre) {
+        if (index == M) {
+            for (int i : result) {
+                sb.append(i + " ");
+            }
+            sb.append("\n");
+            return;
+        }
 
-	public static void btm(int N, int M, int depth) {
-		if (depth == M) {
-		for (int i=0; i <arr.length; i++) {
-				for(int j=0; j<arr.length-1; j++) {
-					if(arr[j]>arr[j+1])return;
-				}
-				sb.append(arr[i]).append(' ');
-			}
-			sb.append('\n');
-			return;
-		}
-		for (int i = 0; i < N; i++) {
-				arr[depth] = i + 1;
-				btm(N, M, depth + 1);
-		}
-	}
+        for (int i = 0; i < N; i++) {
+            if (i >= pre) {
+                result[index] = i + 1;
+                getResult(index + 1, i);
+            }
+        }
+    }
 }
