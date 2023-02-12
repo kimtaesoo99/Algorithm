@@ -27,28 +27,12 @@ public class Main {
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j >= 0; j--) {
                 int a = arr[i] - arr[j];
-                int index = binarySearch(sum, a);
+                int index = Collections.binarySearch(sum, a);
                 if (index >= 0) {
                     System.out.println(arr[i]);
                     return;
                 }
             }
         }
-    }
-
-    public static int binarySearch(List<Integer> sum, int a) {
-        int left = 0;
-        int right = sum.size() - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (sum.get(mid) == a) {
-                return mid;
-            } else if (sum.get(mid) < a) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return -1;
     }
 }
