@@ -1,29 +1,32 @@
-
 class Solution {
-    boolean[] visited;
-    int count = 0;
+    static boolean[] visited;
+    static int count;
     public int solution(String begin, String target, String[] words) {
         visited = new boolean[words.length];
-        getWord(target,words,0,begin);
+        changeWord(begin,target,words,0);
+        
         return count;
     }
-    void getWord(String target, String[] word,int index,String now){
-        if (now.equals(target)){
+    
+    public void changeWord(String begin, String target, String[] words,int index){
+        if(begin.equals(target)){
             count = index;
             return;
         }
-        for (int i = 0; i < word.length; i++){
-            int notOverlapCount = 0;
-            if (visited[i])continue;
-            for (int j = 0; j <word[i].length(); j++){
-                if (now.charAt(j) != word[i].charAt(j))notOverlapCount++;
-                if (notOverlapCount>1)break;
-            }
-            if (notOverlapCount==1){
+        
+        for(int i = 0; i< words.length; i++){
+            if(!visited[i] && canChange(begin, words[i])){
                 visited[i] = true;
-                getWord(target, word, index+1, word[i]);
+                changeWord(words[i], target, words,index+1);
                 visited[i] = false;
             }
         }
+    }
+    public boolean canChange(String word, String word2){
+        int diff = 0;
+        for(int i = 0; i < word.length(); i++){
+            if(word.charAt(i) != word2.charAt(i))diff++;
+        }
+        return diff==1;
     }
 }
