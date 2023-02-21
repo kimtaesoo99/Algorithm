@@ -1,21 +1,21 @@
-class Solution {
-    static int result = 0;
+import java.util.*;
 
+class Solution {
+    static int answer = 0;
     public int solution(int[] numbers, int target) {
 
-        DFS(numbers, 0, target, 0);
-
-        return result;
+        dfs(numbers, target,0,0);
+        return answer;
     }
-
-    static void DFS(int[] numbers, int index, int target, int sum) {
-        if (index == numbers.length) {
-            if (target == sum) {
-                result++;
-            }
-        } else {
-            DFS(numbers, index + 1, target, sum + numbers[index]);
-            DFS(numbers, index + 1, target, sum - numbers[index]);
+    
+    public void dfs(int[] numbers, int target, int sum, int index){
+        if(index == numbers.length){
+            if(sum==target)answer++;
+            return;
         }
+        
+        dfs(numbers, target, sum+numbers[index], index+1);
+        dfs(numbers, target, sum-numbers[index], index+1);
+    
     }
 }
