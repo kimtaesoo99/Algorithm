@@ -1,26 +1,25 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import java.util.*;
 class Solution {
-    List<String> results;
-    boolean[] visited;
+    static List<String> list = new ArrayList<>();
+    static boolean[] visited;
     public String[] solution(String[][] tickets) {
-        results = new ArrayList<>();
         visited = new boolean[tickets.length];
-        getPath(tickets,"ICN", "ICN ",0);
-        Collections.sort(results);
-        return results.get(0).split(" ");
+        
+        dfs(tickets,0, "ICN","ICN");
+        Collections.sort(list);
+        return list.get(0).split(" ");
+       
     }
-    void getPath(String[][] tickets, String start, String result,int index){
-        if (index == tickets.length){
-            results.add(result);
+    
+    public void dfs(String[][] tickets, int index, String pre ,String result){
+        if(index == visited.length){
+            list.add(result);
+            return;
         }
-        for (int i = 0; i < tickets.length; i++){
-            if (tickets[i][0].equals(start) && !visited[i]){
+        for(int i = 0; i < tickets.length; i++){
+            if(!visited[i] && pre.equals(tickets[i][0])){
                 visited[i] = true;
-                getPath(tickets,tickets[i][1],result+tickets[i][1]+" ",index+1);
+                dfs(tickets, index+1, tickets[i][1] , result+" " + tickets[i][1]);
                 visited[i] = false;
             }
         }
