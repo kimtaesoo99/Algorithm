@@ -1,21 +1,23 @@
 class Solution {
-    static boolean[] check;
+    static boolean[] visited;
     public int solution(int n, int[][] computers) {
-        int count = 0;
-        check = new boolean[n];
-        for (int i = 0; i < computers.length; i++){
-            if (!check[i]){
-                getNetwork(i,computers);
-                count++;
+        int answer = 0;
+        visited = new boolean[n];
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                dfs(i,computers);
+                answer++;
             }
         }
-        return count;
+        return answer;
     }
-    void getNetwork(int i, int[][] computers){
-        check[i] = true;
-        for (int j = 0; j <computers.length; j++){
-            if (i!=j && !check[j]&&computers[i][j] ==1){
-                getNetwork(j,computers);
+    
+    public void dfs(int i, int[][] computers){
+        visited[i] = true;
+        
+        for(int j  = 0; j < computers.length; j++){
+            if(!visited[j] && i!=j && computers[i][j] ==1){
+                dfs(j,computers);
             }
         }
     }
