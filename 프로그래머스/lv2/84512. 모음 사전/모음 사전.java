@@ -5,13 +5,7 @@ class Solution {
     public int solution(String word) {
         int answer = 0;
         findResult(0,"");
-        for(int i = 1; i < results.size(); i++){
-            if(results.get(i).equals(word)){
-                answer = i;
-                break;
-            }
-        }
-        return answer;
+        return results.indexOf(word);
     }
     
     public void findResult(int index,String result){
