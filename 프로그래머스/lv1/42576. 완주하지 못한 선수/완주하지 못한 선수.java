@@ -1,15 +1,17 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
+
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        Map<String,Integer> marathon = new HashMap<>();
-        for (String name : participant){
-            marathon.put(name,marathon.getOrDefault(name,0)+1);
+        Map<String,Integer> map = new HashMap<>();
+        for(String s : participant){
+            map.put(s,map.getOrDefault(s,0)+1);
         }
-        for (String name : completion){
-            marathon.put(name,marathon.get(name)-1);
+        for(String s : completion){
+            map.put(s, map.get(s)-1);
         }
-
-        return marathon.entrySet().stream().map(Map.Entry::getKey).filter(i ->marathon.get(i)!=0).findAny().orElse("");
+        
+        return map.entrySet().stream().filter(i -> i.getValue()!=0)
+                .findFirst().map(Entry::getKey).orElse("");
     }
 }
