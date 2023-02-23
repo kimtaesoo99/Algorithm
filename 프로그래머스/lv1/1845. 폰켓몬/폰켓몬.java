@@ -1,12 +1,13 @@
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 class Solution {
     public int solution(int[] nums) {
-        Map<Integer,Integer> pocket = new HashMap<>();
-        for (int p : nums){
-            pocket.put(p,1);
+        int count = nums.length;
+        Set<Integer> set = new HashSet<>();
+        for(int i = 0; i < nums.length; i++){
+            set.add(nums[i]);
         }
-        return (int) Math.min((long) pocket.entrySet().size(),nums.length/2);
+        if(count/2 > set.size())return set.size();
+        
+        return count/2;
     }
 }
