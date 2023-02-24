@@ -1,32 +1,33 @@
 class Solution {
+    static int count = 0;
     static boolean[] visited;
-    static int count;
     public int solution(String begin, String target, String[] words) {
-        visited = new boolean[words.length];
+        visited= new boolean[words.length];
         changeWord(begin,target,words,0);
-        
-        return count;
+        return count==Integer.MAX_VALUE?0:count;
     }
     
-    public void changeWord(String begin, String target, String[] words,int index){
+    public void changeWord(String begin, String target, String[] words, int c){
         if(begin.equals(target)){
-            count = index;
+            count = c;
             return;
         }
-        
-        for(int i = 0; i< words.length; i++){
-            if(!visited[i] && canChange(begin, words[i])){
+        for(int i = 0; i < words.length; i++){
+            if(!visited[i] && canChange(begin,words[i])){
                 visited[i] = true;
-                changeWord(words[i], target, words,index+1);
+                changeWord(words[i],target,words,c+1);
                 visited[i] = false;
             }
         }
     }
-    public boolean canChange(String word, String word2){
-        int diff = 0;
-        for(int i = 0; i < word.length(); i++){
-            if(word.charAt(i) != word2.charAt(i))diff++;
+    
+    public boolean canChange(String s1, String s2){
+        int diffCount = 0;
+            
+        for(int i = 0; i < s1.length(); i++){
+            if(s1.charAt(i) != s2.charAt(i))diffCount++;
         }
-        return diff==1;
+        if(diffCount==1)return true;
+        return false;
     }
 }
