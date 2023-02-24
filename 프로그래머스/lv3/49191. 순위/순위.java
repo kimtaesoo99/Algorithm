@@ -1,35 +1,33 @@
+import java.util.*;
 class Solution {
     public int solution(int n, int[][] results) {
-        int[][] match = new int[n+1][n+1];
-        
+        int[][] match = new int[n][n];
         for(int i = 0; i < results.length; i++){
-            int a = results[i][0];
-            int b = results[i][1];
-            match[a][b] = 1;
-            match[b][a] = -1;
+            match[results[i][0]-1][results[i][1]-1] = 1;
+            match[results[i][1]-1][results[i][0]-1] = -1;
         }
         
-        for(int i = 1; i <=n; i++){
-            for(int j = 1; j<=n; j++){
-                for(int k = 1; k<=n; k++){
-                    if(match[i][j]==1 && match[j][k] ==1){
-                        match[i][k] =1;
-                        match[k][i] = -1;
+        for(int i = 0 ; i < n; i++){
+            for(int j = 0; j < n; j++){
+                for(int k = 0; k < n; k++){
+                    if(match[i][k]==1 && match[k][j]==1){
+                        match[i][j] = 1;
+                        match[j][i] = -1;
                     }
-                    if(match[i][j]==-1 && match[j][k] ==-1){
-                        match[i][k] =-1;
-                        match[k][i] = 1;
+                    if(match[i][k] ==-1 && match[k][j]==-1){
+                        match[i][j] =-1;
+                        match[j][i]= 1;
                     }
                 }
             }
         }
-        int answer=0;
-        for(int i =1 ; i<=n; i++){
+        int answer = 0;
+        for(int i =0;i<n; i++){
             int count = 0;
-            for(int j = 1; j <=n;j++){
+            for(int j = 0; j<n; j++){
                 if(match[i][j]!=0)count++;
             }
-            if(count ==n-1)answer++;
+            if(count == n-1)answer++;
         }
         
         return answer;
