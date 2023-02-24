@@ -1,23 +1,20 @@
-
-import java.util.Arrays;
+import java.util.*;
 class Solution {
-public static int solution(int[] people, int limit) {
-        int count = 0;
+    public int solution(int[] people, int limit) {
         Arrays.sort(people);
-        int last = people.length-1;
-        for (int i=0;i<people.length/2;i++){
-            if (last<i)break;
-            if (people[i]+people[last]>limit){
-                count++;
-                last--;
+        int end = people.length-1;
+        int answer = 0;
+        for(int i = 0; i<people.length/2; i++){
+            if(i>end)break;
+            if(people[i] + people[end]<=limit){
+                end--;
+                answer++;
+            }else{
                 i--;
-            }
-            else {
-                count++;
-                last--;
+                end--;
+                answer++;
             }
         }
-
-        return count;
+        return answer;
     }
 }
