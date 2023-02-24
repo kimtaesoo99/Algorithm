@@ -1,27 +1,28 @@
 import java.util.*;
 class Solution {
-    static List<String> list = new ArrayList<>();
     static boolean[] visited;
+    static List<String> results = new ArrayList<>();
     public String[] solution(String[][] tickets) {
         visited = new boolean[tickets.length];
-        
-        dfs(tickets,0, "ICN","ICN");
-        Collections.sort(list);
-        return list.get(0).split(" ");
-       
+        findPath("ICN","ICN",0,tickets);
+        Collections.sort(results);
+        return results.get(0).split(" ");
     }
     
-    public void dfs(String[][] tickets, int index, String pre ,String result){
-        if(index == visited.length){
-            list.add(result);
+    public void findPath(String now, String result, int index, String[][] tickets){
+        if(index == tickets.length){
+            results.add(result);
             return;
         }
+        
         for(int i = 0; i < tickets.length; i++){
-            if(!visited[i] && pre.equals(tickets[i][0])){
-                visited[i] = true;
-                dfs(tickets, index+1, tickets[i][1] , result+" " + tickets[i][1]);
+            if(!visited[i] && tickets[i][0].equals(now)){
+                visited[i]= true;
+                findPath(tickets[i][1],result +" "+ tickets[i][1],index+1,tickets);
                 visited[i] = false;
             }
         }
+        
+        
     }
 }
