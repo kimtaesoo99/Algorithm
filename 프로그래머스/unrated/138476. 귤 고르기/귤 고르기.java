@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,15 +16,9 @@ class Solution {
         int result = values.size();
         for (int v : values){
             if (removeCount<v)break;
-            else if (removeCount == v) {
-                removeCount = 0;
-                result--;
-            }else {
-                removeCount = removeCount - v;
-                result--;
-            }
+            removeCount -= v;
+            result--;
         }
-
         return result;
     }
 }
