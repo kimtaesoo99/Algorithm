@@ -6,7 +6,6 @@ public class Main {
     static int count = 0;
     static int[][] map;
     static boolean[][] visited;
-    static boolean[][] copyVisited;
     static int n;
     static int m;
 
@@ -27,7 +26,6 @@ public class Main {
 
     private static void setWall(int wallCount) {
         if (wallCount == 3) {
-            copyVisited = new boolean[n][m];
             int[][] copyMap = new int[n][m];
 
             for (int i = 0; i < n; i++) {
@@ -36,7 +34,7 @@ public class Main {
 
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    if (copyMap[i][j] == 2 && !copyVisited[i][j]) {
+                    if (copyMap[i][j] == 2) {
                         bfs(copyMap,i, j);
                     }
                 }
@@ -62,7 +60,6 @@ public class Main {
     private static void bfs(int[][] copyMap, int y, int x) {
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[]{y, x});
-        copyVisited[y][x] = true;
 
         int[] dy = {1, 0, -1, 0};
         int[] dx = {0, -1, 0, 1};
@@ -75,9 +72,8 @@ public class Main {
                     continue;
                 }
                 if (copyMap[moveY][moveX] == 0 && !visited[moveY][moveX]) {
-                    copyVisited[moveY][moveX] = true;
                     q.offer(new int[]{moveY, moveX});
-                    copyMap[moveY][moveX] = 2;
+                    copyMap[moveY][moveX] = 3;
                 }
             }
         }
