@@ -4,20 +4,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class Solution {
+    static int j = 0;
+    static int answer = 0;
     public int solution(int[] A, int[] B) {
-        int answer = 0;
 
-        List<Integer> aList = Arrays.stream(A).boxed().sorted(Collections.reverseOrder())
+        List<Integer> bList = Arrays.stream(B).boxed().sorted(Collections.reverseOrder())
                 .collect(Collectors.toList());
-         List<Integer> bList = Arrays.stream(B).boxed().sorted(Collections.reverseOrder())
-                .collect(Collectors.toList());
-         int j = 0;
-         for (int i = 0; i < aList.size(); i++){
-            if (bList.get(j) > aList.get(i)){
-                answer++;
-                j++;
-            }
-         }
+
+         Arrays.stream(A).boxed().sorted(Collections.reverseOrder())
+                 .forEach(i -> {
+                     if (i < bList.get(j)){
+                        j++;
+                        answer++;
+                     }
+                 });
         return answer;
     }
 }
