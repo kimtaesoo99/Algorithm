@@ -1,6 +1,6 @@
 class Solution {
-    static int zero = 0;
-    static int one = 0;
+    static int zero;
+    static int one;
 
     public int[] solution(int[][] arr) {
         compression(arr.length, arr, 0, 0);
@@ -10,10 +10,10 @@ class Solution {
     private void compression(int length, int[][] arr, int y, int x) {
         if (isSameArea(length, arr, y, x)) {
             if (arr[y][x] == 1) {
-                one += 1;
+                one++;
                 return;
             }
-            zero += 1;
+            zero++;
             return;
         }
         int halfLength = length / 2;
