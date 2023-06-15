@@ -7,10 +7,9 @@ class Solution {
         for (int i = 0; i < files.length; i++) {
             result[i] = division(files[i], i);
         }
-
-        Arrays.sort(result);
-
+        
         return Arrays.stream(result)
+                .sorted()
                 .map(file -> file.result)
                 .toArray(String[]::new);
     }
