@@ -11,38 +11,43 @@ public class Main {
     static int[][] move = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt(); //세로
-        M = sc.nextInt(); //가로
+        init();
+        System.out.println(bfs());
+    }
 
+    private static void init() {
+        Scanner sc = new Scanner(System.in);
+        N = sc.nextInt();
+        M = sc.nextInt();
         map = new String[N][M];
         visited = new boolean[N][M][N][M];
         copyMap = new String[N][M];
 
-        int[] redIndex = new int[2];
-        int[] blueIndex = new int[2];
-
         for (int i = 0; i < N; i++) {
-            String[] info = sc.next().split("");
+            String[] row = sc.next().split("");
             for (int j = 0; j < M; j++) {
-                map[i][j] = info[j];
-                if (info[j].equals("B")) {
-                    blueIndex[0] = i;
-                    blueIndex[1] = j;
+                map[i][j] = row[j];
+            }
+        }
+    }
+
+    private static int[] findIndex(String target) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (map[i][j].equals(target)) {
                     map[i][j] = ".";
-                }
-                if (info[j].equals("R")) {
-                    redIndex[0] = i;
-                    redIndex[1] = j;
-                    map[i][j] = ".";
+                    return new int[]{i, j};
                 }
             }
         }
-        System.out.println(bfs(redIndex, blueIndex));
+        return new int[]{-1, -1};
     }
 
-    private static int bfs(int[] redIndex, int[] blueIndex) {
+    private static int bfs() {
         Queue<int[]> q = new LinkedList<>();
+        int[] redIndex = findIndex("R");
+        int[] blueIndex = findIndex("B");
+
         q.offer(new int[]{redIndex[0], redIndex[1], blueIndex[0], blueIndex[1], 1});
         visited[redIndex[0]][redIndex[1]][blueIndex[0]][blueIndex[1]] = true;
 
@@ -59,62 +64,25 @@ public class Main {
             }
 
             for (int i = 0; i < 4; i++) {
-                for (int k = 0; k < map.length; k++) {
-                    copyMap[k] = map[k].clone();
-                }
-                if (i == 0 && redY > blueY) {
-                    moveMarble(redY, redX, i, "R");
-                    moveMarble(blueY, blueX, i, "B");
-                } else if (i == 0) {
-                    moveMarble(blueY, blueX, i, "B");
-                    moveMarble(redY, redX, i, "R");
-                }
+                cloneMap();
 
-                if (i == 1 && redY > blueY) {
-                    moveMarble(blueY, blueX, i, "B");
-                    moveMarble(redY, redX, i, "R");
-                } else if (i == 1) {
-                    moveMarble(redY, redX, i, "R");
-                    moveMarble(blueY, blueX, i, "B");
+                int[] moveRedIndex;
+                int[] moveBlueIndex;
+
+                if ((i == 0 && redY > blueY) || (i == 1 && redY <= blueY)) {
+                    moveRedIndex = moveMarble(redY, redX, i, "R");
+                    moveBlueIndex = moveMarble(blueY, blueX, i, "B");
+                } else if ((i == 2 && redX > blueX) || (i == 3 && redX <= blueX)) {
+                    moveRedIndex = moveMarble(redY, redX, i, "R");
+                    moveBlueIndex = moveMarble(blueY, blueX, i, "B");
+                } else {
+                    moveBlueIndex = moveMarble(blueY, blueX, i, "B");
+                    moveRedIndex = moveMarble(redY, redX, i, "R");
                 }
 
-                if (i == 2 && redX > blueX) {
-                    moveMarble(redY, redX, i, "R");
-                    moveMarble(blueY, blueX, i, "B");
-                } else if (i == 2) {
-                    moveMarble(blueY, blueX, i, "B");
-                    moveMarble(redY, redX, i, "R");
-                }
-
-                if (i == 3 && redX > blueX) {
-                    moveMarble(blueY, blueX, i, "B");
-                    moveMarble(redY, redX, i, "R");
-                } else if (i == 3) {
-                    moveMarble(redY, redX, i, "R");
-                    moveMarble(blueY, blueX, i, "B");
-                }
-
-                int[] moveRedIndex = new int[2];
-                int[] moveBlueIndex = new int[2];
-
-                for (int k = 0; k < N; k++) {
-                    for (int j = 0; j < M; j++) {
-                        if (copyMap[k][j].equals("B")) {
-                            moveBlueIndex[0] = k;
-                            moveBlueIndex[1] = j;
-                        }
-                        if (copyMap[k][j].equals("R")) {
-                            moveRedIndex[0] = k;
-                            moveRedIndex[1] = j;
-                        }
-                    }
-                }
-
-                if (moveRedIndex[0] == 0 && moveBlueIndex[0] == 0) {
+                if (isGameOver(moveBlueIndex)) {
                     continue;
-                } else if (moveBlueIndex[0] == 0) {
-                    continue;
-                } else if (moveRedIndex[0] == 0) {
+                } else if (isWon(moveRedIndex)) {
                     return count;
                 }
 
@@ -127,16 +95,37 @@ public class Main {
         return -1;
     }
 
-    private static void moveMarble(int y, int x, int moveInfo, String color) {
-        while (!(copyMap[y + move[moveInfo][0]][x + move[moveInfo][1]].equals("#") || copyMap[y + move[moveInfo][0]][x
-                + move[moveInfo][1]].equals("R") || copyMap[y + move[moveInfo][0]][x + move[moveInfo][1]].equals(
-                "B"))) {
-            y = y + move[moveInfo][0];
-            x = x + move[moveInfo][1];
+    private static void cloneMap() {
+        for (int k = 0; k < map.length; k++) {
+            copyMap[k] = map[k].clone();
+        }
+    }
+
+    private static int[] moveMarble(int y, int x, int directionIndex, String color) {
+        int dy = move[directionIndex][0];
+        int dx = move[directionIndex][1];
+
+        while (isValidMove(y + dy, x + dx)) {
+            y += dy;
+            x += dx;
             if (map[y][x].equals("O")) {
-                return;
+                return new int[]{0, 0};
             }
         }
         copyMap[y][x] = color;
+        return new int[]{y, x};
+    }
+
+    private static boolean isValidMove(int y, int x) {
+        String cell = copyMap[y][x];
+        return (!cell.equals("#") && !cell.equals("R") && !cell.equals("B"));
+    }
+
+    private static boolean isGameOver(int[] blueIndex) {
+        return blueIndex[0] == 0;
+    }
+
+    private static boolean isWon(int[] redIndex) {
+        return redIndex[0] == 0;
     }
 }
