@@ -66,10 +66,12 @@ public class Main {
         result.setLength(0);
 
         // 위치
+        loop:
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (arr[i][j] == find) {
                     result.append((i + 1)).append(" ").append((j + 1)).append("\n");
+                    break loop;
                 }
             }
         }
