@@ -1,38 +1,43 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
-	public static int[] arr;
-	public static boolean[] check;
-	public static StringBuilder sb = new StringBuilder();
-	
+
+	private static StringBuilder sb;
+	private static int[] arr;
+	private static boolean[] visited;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		
+		sb = new StringBuilder();
+
+		String[] info = br.readLine().split(" ");
+		int N = Integer.parseInt(info[0]);
+		int M = Integer.parseInt(info[1]);
+
 		arr = new int[M];
-		check = new boolean[N];
-		rec(M,N,0);	
+		visited = new boolean[N + 1];
+
+		combination(N, 0);
 		System.out.println(sb);
-	}	
-	public static void rec(int M, int N, int index) {
-		if(M==index) {
-			for(int val : arr) {
-				sb.append(val).append(' ');
+	}
+
+	private static void combination(int N, int M) {
+		if (M == arr.length) {
+			for (int i = 0; i < arr.length; i++) {
+				sb.append(arr[i]).append(" ");
 			}
-			sb.append('\n');
+			sb.append("\n");
 			return;
 		}
-		for(int i=0; i <N;i++) {
-			if(!check[i]) {
-				check[i]=true;
-				arr[index]=i+1;
-				rec(M, N, index + 1);
-				check[i]=false;
+
+		for (int i = 1; i <= N; i++) {
+			if (!visited[i]) {
+				visited[i] = true;
+				arr[M] = i;
+				combination(N, M + 1);
+				visited[i] = false;
 			}
 		}
 	}
