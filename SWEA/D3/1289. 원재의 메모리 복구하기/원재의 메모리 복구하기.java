@@ -1,32 +1,28 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 class Solution {
 	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-		Scanner sc = new Scanner(System.in);
-		int T;
-		T = sc.nextInt();
+		int T = Integer.parseInt(br.readLine());
 
 		for (int test_case = 1; test_case <= T; test_case++) {
-			String str = sc.next();
-
+			String str = br.readLine();
 			int count = 0;
+			char pre = '0';
 
-			char pre = '2';
-
-			for (int i = str.length() - 1; i >= 0; i--) {
-				char c = str.charAt(i);
-				if (c != pre) {
-					pre = c;
+			for (int i = 0; i < str.length(); i++) {
+				if (str.charAt(i) != pre) {
 					count++;
+					pre = str.charAt(i);
 				}
 			}
-			
-			if(str.charAt(0) == '0') {
-				count--;
-			}
-			
-			System.out.println("#" + test_case + " " + count );
+			sb.append("#").append(test_case).append(" ").append(count).append("\n");
 		}
+		
+		System.out.println(sb);
+		br.close();
 	}
 }
