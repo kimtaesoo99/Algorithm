@@ -1,44 +1,43 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
 
 public class Main {
-	public static int[] arr;
-	public static boolean[] check;
-	public static StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws IOException {
+	private static int[] arr;
+	private static boolean[] visited;
+	private static StringBuilder sb;
+
+	public static void main(String args[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+		sb = new StringBuilder();
 
-		arr = new int[M];
-		check = new boolean[N];
-		btm(N, M, 0);
+		String[] info = br.readLine().split(" ");
+		int n = Integer.parseInt(info[0]);
+		int m = Integer.parseInt(info[1]);
+
+		arr = new int[m];
+		visited = new boolean[n + 1];
+
+		find(0, m , -1);
+		
 		System.out.println(sb);
 	}
 
-	public static void btm(int N, int M, int depth) {
-		if (depth == M) {
-		for (int i=0; i <arr.length; i++) {
-				for(int j=0; j<arr.length-1; j++) {
-					if(arr[j]>arr[j+1])return;
-				}
-				sb.append(arr[i]).append(' ');
+	private static void find(int n, int m, int pre) {
+		if (n == arr.length) {
+			for (int value : arr) {
+				sb.append(value).append(" ");
 			}
-
-			sb.append('\n');
+			sb.append("\n");
 			return;
 		}
 
-		for (int i = 0; i < N; i++) {
-			if (!check[i]) {
-				check[i] = true;
-				arr[depth] = i + 1;
-				btm(N, M, depth + 1);
-				check[i] = false;
+		for (int i = 1; i < visited.length; i++) {
+			if (!visited[i] && pre < i) {
+				visited[i] = true;
+				arr[n] = i;
+				find(n + 1, m, i);
+				visited[i] = false;
 			}
 		}
 	}
