@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 public class Main {
 
 	private static List<Character> word = Arrays.asList('A', 'C', 'G', 'T');
-	private static Integer[] count = new Integer[4];
+	private static int[] count = new int[4];
 
 	public static void main(String args[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
