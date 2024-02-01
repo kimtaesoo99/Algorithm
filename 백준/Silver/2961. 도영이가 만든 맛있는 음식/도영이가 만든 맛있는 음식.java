@@ -1,43 +1,43 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static List<Ingredient> list = new ArrayList<>();
-    static List<Integer> gaps = new ArrayList<>();
-    static boolean[] visited;
-    static int n;
-    public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        visited = new boolean[n];
 
-        for (int i = 0; i < n; i++){
-            list.add(new Ingredient(sc.nextInt(), sc.nextInt()));
-        }
+	private static int[] s;
+	private static int[] b;
+	private static int n;
+	private static int result = 1_000_000_000;
 
-        dfs(0,1, 0,0);
-        Collections.sort(gaps);
-        System.out.println(gaps.get(0));
-    }
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
 
-    private static void dfs(int count, int sourSum, int bitterSum,int choose){
-        if (choose>=1)gaps.add(Math.abs(sourSum - bitterSum));
-        if (count == n)return;
+		n = Integer.parseInt(br.readLine());
 
-        dfs(count+1, sourSum * list.get(count).sour, bitterSum + list.get(count).bitter,choose+1);
-        dfs(count+1, sourSum , bitterSum,choose);
+		s = new int[n];
+		b = new int[n];
 
-    }
-}
+		for (int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			s[i] = Integer.parseInt(st.nextToken());
+			b[i] = Integer.parseInt(st.nextToken());
+		}
 
-class Ingredient{
-    public int sour;
-    public int bitter;
+		cook(0, 1, 0, 0);
 
-    public Ingredient(int sour, int bitter) {
-        this.sour = sour;
-        this.bitter = bitter;
-    }
+		System.out.println(result);
+	}
+
+	private static void cook(int index, int sSum, int bSum, int chooseCnt) {
+		if (index == n) {
+			if (chooseCnt != 0) {
+				result = Math.min(result, Math.abs(sSum - bSum));
+			}
+			return;
+		}
+
+		cook(index + 1, sSum * s[index], bSum + b[index], chooseCnt + 1);
+		cook(index + 1, sSum, bSum, chooseCnt);
+	}
 }
