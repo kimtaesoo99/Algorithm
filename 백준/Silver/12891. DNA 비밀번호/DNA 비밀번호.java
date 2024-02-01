@@ -43,6 +43,11 @@ public class Main {
 	}
 
 	private static boolean canPassword() {
-		return word.stream().allMatch(i -> count[word.indexOf(i)] <= 0);
+		for(int i = 0; i < 4; i++) {
+			if(count[i] > 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
