@@ -1,28 +1,31 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
-class Main {
+public class Main {
 
     private static final int[] dy = {1, 0, -1, 0};
-    private static final int[] dx = {0, 1, 0, -1};
+    private static final int[] dx = {0, -1, 0, 1};
 
-    private static boolean change;
+    private static int N;
+    private static int L;
+    private static int R;
     private static int[][] map;
     private static boolean[][] visited;
-    private static int l;
-    private static int r;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        l = sc.nextInt();
-        r = sc.nextInt();
+        N = sc.nextInt();
+        L = sc.nextInt();
+        R = sc.nextInt();
 
-        map = new int[n][n];
+        map = new int[N][N];
+        visited = new boolean[N][N];
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 map[i][j] = sc.nextInt();
             }
         }
@@ -30,65 +33,63 @@ class Main {
         int result = 0;
 
         while (true) {
-            visited = new boolean[n][n];
-            change = false;
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
+            int switchingCount = 0;
+            visited = new boolean[N][N];
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
                     if (!visited[i][j]) {
-                        bfs(i, j, n);
+                        switchingCount++;
+                        bfs(i, j);
                     }
                 }
             }
-            if (!change) {
+            if (switchingCount == N * N) {
                 break;
             }
             result++;
         }
-
         System.out.println(result);
     }
 
-    private static void bfs(int y, int x, int n) {
+    private static void bfs(int y, int x) {
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[]{y, x});
-        boolean[][] open = new boolean[n][n];
-        int sum = map[y][x];
-        int count = 1;
-        open[y][x] = true;
         visited[y][x] = true;
+        int sum = map[y][x];
+        List<int[]> change = new ArrayList<>();
+        change.add(new int[]{y, x});
 
         while (!q.isEmpty()) {
-            int[] now = q.poll();
-
+            int[] move = q.poll();
             for (int i = 0; i < 4; i++) {
-                int moveY = now[0] + dy[i];
-                int moveX = now[1] + dx[i];
+                int moveY = move[0] + dy[i];
+                int moveX = move[1] + dx[i];
 
-                if (0 <= moveY && moveY < n && 0 <= moveX && moveX < n && !open[moveY][moveX] && !visited[moveY][moveX]) {
-                    int gap = Math.abs(map[now[0]][now[1]] - map[moveY][moveX]);
-                    if (l <= gap && gap <= r) {
-                        q.offer(new int[]{moveY, moveX});
-                        open[moveY][moveX] = true;
-                        sum += map[moveY][moveX];
-                        visited[moveY][moveX] = true;
-                        count++;
-                    }
+                if (!validation(moveY, moveX)) {
+                    continue;
+                }
+
+                int gap = Math.abs(map[moveY][moveX] - map[move[0]][move[1]]);
+
+                if (!visited[moveY][moveX] && L <= gap && gap <= R) {
+                    visited[moveY][moveX] = true;
+                    change.add(new int[]{moveY, moveX});
+                    q.offer(new int[]{moveY, moveX});
+                    sum += map[moveY][moveX];
                 }
             }
         }
+        changeMap(change, sum);
+    }
 
-        if (count == 1) {
-            return;
-        }
+    private static boolean validation(int moveY, int moveX) {
+        return 0 <= moveY && moveY < N && 0 <= moveX && moveX < N;
+    }
 
-        change = true;
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (open[i][j]) {
-                    map[i][j] = sum / count;
-                }
-            }
+    private static void changeMap(List<int[]> list, int sum) {
+        int changeValue = sum / list.size();
+        for (int[] l : list) {
+            map[l[0]][l[1]] = changeValue;
         }
     }
 }
