@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -11,18 +12,18 @@ public class Main {
 		int n = Integer.parseInt(br.readLine());
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		Stack<int[]> s = new Stack<>();
+		Deque<int[]> s = new ArrayDeque<>();
 
 		for (int i = 1; i <= n; i++) {
 			int value = Integer.parseInt(st.nextToken());
 
 			while (!s.isEmpty()) {
-				if (s.peek()[0] > value) {
-					sb.append(s.peek()[1]).append(" ");
+				if (s.peekLast()[0] > value) {
+					sb.append(s.peekLast()[1]).append(" ");
 					s.add(new int[] { value, i });
 					break;
 				} else {
-					s.pop();
+					s.pollLast();
 				}
 			}
 
