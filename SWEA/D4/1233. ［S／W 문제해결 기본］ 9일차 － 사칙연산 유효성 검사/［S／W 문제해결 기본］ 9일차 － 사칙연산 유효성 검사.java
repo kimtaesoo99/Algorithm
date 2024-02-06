@@ -17,6 +17,7 @@ public class Solution {
 			int n = Integer.parseInt(br.readLine());
 
 			Node[] nodes = new Node[n + 1];
+			int check = 1;
 			
 			for (int i = 1; i <= n; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -25,7 +26,14 @@ public class Solution {
 				int left = 0;
 				int right = 0;
 				if (st.hasMoreTokens()) {
+					if(!operation.contains(value)) {
+						check = 0;
+					}
 					left = Integer.parseInt(st.nextToken());
+				} else {
+					if(operation.contains(value)) {
+						check = 0;
+					}
 				}
 				if (st.hasMoreElements()) {
 					right = Integer.parseInt(st.nextToken());
@@ -34,24 +42,9 @@ public class Solution {
 				nodes[i] = new Node(num, value, left, right);
 			}
 
-			sb.append("#").append(test_case).append(" ").append(check(nodes) ? 1 : 0).append("\n");
+			sb.append("#").append(test_case).append(" ").append(check).append("\n");
 		}
 		System.out.println(sb);
-	}
-
-	private static boolean check(Node[] nodes) {
-		for (int i = 1; i < nodes.length; i++) {
-			if (nodes[i].left == 0 && nodes[i].right == 0) {
-				if(operation.contains(nodes[i].value)) {
-					return false;
-				}
-			} else {
-				if(!operation.contains(nodes[i].value)) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }
 
