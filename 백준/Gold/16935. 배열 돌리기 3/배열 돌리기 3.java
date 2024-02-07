@@ -7,16 +7,19 @@ import java.util.StringTokenizer;
 class Main {
 
 	private static int[][] map;
+	private static Deque<Integer> d;
 
 	public static void main(String args[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
 
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
 		int r = Integer.parseInt(st.nextToken());
 
 		map = new int[n][m];
+		d = new ArrayDeque<>();
 
 		for (int i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -28,34 +31,39 @@ class Main {
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < r; i++) {
 			String command = st.nextToken();
-			if (command.equals("1")) {
+			switch (command) {
+			case "1":
 				changeUpAndDown();
-			} else if (command.equals("2")) {
+				break;
+			case "2":
 				changeLeftAndRight();
-			} else if (command.equals("3")) {
+				break;
+			case "3":
 				rotateRight();
-			} else if (command.equals("4")) {
+				break;
+			case "4":
 				rotateLeft();
-			} else if (command.equals("5")) {
+				break;
+			case "5":
 				moveRight();
-			} else if (command.equals("6")) {
+				break;
+			default:
 				moveLeft();
+				break;
 			}
 		}
 
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				System.out.print(map[i][j] + " ");
+				sb.append(map[i][j]).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 		}
 
-		System.out.println();
+		System.out.println(sb);
 	}
 
 	private static void changeUpAndDown() {
-		Deque<Integer> d = new ArrayDeque<>();
-
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
 				d.offerFirst(map[i][j]);
@@ -70,8 +78,6 @@ class Main {
 	}
 
 	private static void changeLeftAndRight() {
-		Deque<Integer> d = new ArrayDeque<>();
-
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
 				d.offerFirst(map[i][j]);
@@ -83,8 +89,6 @@ class Main {
 	}
 
 	private static void rotateRight() {
-		Deque<Integer> d = new ArrayDeque<>();
-
 		for (int j = 0; j < map[0].length; j++) {
 			for (int i = map.length - 1; i >= 0; i--) {
 				d.offerFirst(map[i][j]);
@@ -107,8 +111,6 @@ class Main {
 	}
 
 	private static void moveRight() {
-		Deque<Integer> d = new ArrayDeque<>();
-
 		// 1
 		for (int i = 0; i < map.length / 2; i++) {
 			for (int j = 0; j < map[0].length / 2; j++) {
