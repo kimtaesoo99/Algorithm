@@ -7,6 +7,7 @@ class Solution {
     private static int max;
     private static Food[] foods;
     private static int limitCalorie;
+    private static int count;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,7 +16,7 @@ class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int count = Integer.parseInt(st.nextToken());
+            count = Integer.parseInt(st.nextToken());
             limitCalorie = Integer.parseInt(st.nextToken());
             max = 0;
 
@@ -26,21 +27,21 @@ class Solution {
                 foods[i] = new Food(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
             }
 
-            findMax(0, 0, new boolean[count], -1);
+            findMax(0, 0, 0);
             sb.append("#").append(test_case).append(" ").append(max).append("\n");
         }
         System.out.println(sb);
     }
 
-    private static void findMax(int valueSum, int calorieSum, boolean[] choose, int pre) {
+    private static void findMax(int valueSum, int calorieSum, int pre) {
+        if (calorieSum > limitCalorie) {
+            return;
+        }
+
         max = Math.max(max, valueSum);
 
-        for (int i = 0; i < choose.length; i++) {
-            if (!choose[i] && foods[i].calorie + calorieSum <= limitCalorie && pre < i) {
-                choose[i] = true;
-                findMax(valueSum + foods[i].value, calorieSum + foods[i].calorie, choose, i);
-                choose[i] = false;
-            }
+        for (int i = pre; i < count; i++) {
+            findMax(valueSum + foods[i].value, calorieSum + foods[i].calorie, i + 1);
         }
     }
 }
