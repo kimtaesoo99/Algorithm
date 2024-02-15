@@ -1,46 +1,72 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 class Solution {
 
-    private static boolean[] visited;
-    private static int result;
+	private static int result;
+	private static int endX;
+	private static int endY;
+	private static int n;
+	private static boolean[] visited;
+	private static Location[] locations;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T;
-        T = sc.nextInt();
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
+		StringBuilder sb = new StringBuilder();
+		int T = Integer.parseInt(br.readLine());
 
-        for (int test_case = 1; test_case <= T; test_case++) {
-            int n = sc.nextInt();
-            result = Integer.MAX_VALUE;
+		for (int test = 1; test <= T; test++) {
+			n = Integer.parseInt(br.readLine());
+			result = Integer.MAX_VALUE;
 
-            int[][] list = new int[n + 2][2];
-            visited = new boolean[n + 2];
+			st = new StringTokenizer(br.readLine());
 
-            for (int i = 0; i <= n + 1; i++) {
-                list[i][0] = sc.nextInt();
-                list[i][1] = sc.nextInt();
-            }
+			int startX = Integer.parseInt(st.nextToken());
+			int startY = Integer.parseInt(st.nextToken());
+			endX = Integer.parseInt(st.nextToken());
+			endY = Integer.parseInt(st.nextToken());
 
-            backTracking(list, 0, 0, n, list[0][0], list[0][1]);
+			locations = new Location[n];
+			visited = new boolean[n];
 
-            System.out.println("#" + test_case + " " + result);
-        }
-    }
+			for (int i = 0; i < n; i++) {
+				locations[i] = new Location(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			}
 
-    private static void backTracking(int[][] list, int depth, int sum, int n, int y, int x) {
-        if (depth == n) {
-            result = Math.min(result, sum + Math.abs(list[1][0] - y) + Math.abs(list[1][1] - x));
-            return;
-        }
+			back(0, startX, startY, 0);
 
-        for (int i = 2; i <= n + 1; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                backTracking(list, depth + 1, sum + Math.abs(list[i][0] - y) + Math.abs(list[i][1] - x), n,
-                        list[i][0], list[i][1]);
-                visited[i] = false;
-            }
-        }
-    }
+			sb.append("#").append(test).append(" ").append(result).append("\n");
+		}
+		System.out.println(sb);
+	}
+
+	private static void back(int index, int x, int y, int sum) {
+		if (index == n) {
+			result = Math.min(result, sum + Math.abs(x - endX) + Math.abs(y - endY));
+			return;
+		}
+
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				visited[i] = true;
+				back(index + 1, locations[i].x, locations[i].y,
+						sum + Math.abs(x - locations[i].x) + Math.abs(y - locations[i].y));
+				visited[i] = false;
+			}
+		}
+	}
+}
+
+class Location {
+
+	int x;
+	int y;
+
+	public Location(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 }
