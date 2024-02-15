@@ -12,7 +12,6 @@ class Main {
 	private static int ySize;
 	private static int xSize;
 	private static char[][] map;
-	private static boolean[][] visited;
 	private static int result;
 	private static boolean link;
 
@@ -23,7 +22,6 @@ class Main {
 		xSize = Integer.parseInt(st.nextToken());
 
 		map = new char[ySize][xSize];
-		visited = new boolean[ySize][xSize];
 
 		for (int i = 0; i < ySize; i++) {
 			String line = br.readLine();
@@ -52,8 +50,8 @@ class Main {
 			int moveX = x + 1;
 
 			if (0 <= moveY && moveY < ySize && 0 <= moveX && moveX < xSize) {
-				if (map[moveY][moveX] == '.' && !visited[moveY][moveX]) {
-					visited[moveY][moveX] = true;
+				if (map[moveY][moveX] == '.') {
+					map[moveY][moveX] = 'x';
 					start(moveY, moveX);
 					if (link) {
 						return;
