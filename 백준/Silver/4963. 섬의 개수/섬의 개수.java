@@ -1,17 +1,27 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] map;
-    static boolean[][] visited;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    private static int[] dx = {0, -1, 0, 1, -1, 1, -1, 1};
+    private static int[] dy = {1, 0, -1, 0, -1, 1, 1, -1};
+    private static boolean[][] visited;
+    private static int[][] map;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
+
         while (true) {
-            int w = sc.nextInt();
-            int h = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int w = Integer.parseInt(st.nextToken());
+            int h = Integer.parseInt(st.nextToken());
             if (w == 0 && h == 0) {
                 break;
             }
@@ -20,8 +30,9 @@ public class Main {
             visited = new boolean[h][w];
 
             for (int i = 0; i < h; i++) {
+                st = new StringTokenizer(br.readLine());
                 for (int j = 0; j < w; j++) {
-                    map[i][j] = sc.nextInt();
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
 
@@ -45,9 +56,6 @@ public class Main {
         q.offer(new int[]{y, x});
         visited[y][x] = true;
 
-        int[] dy = {1, 0, -1, 0, -1, 1, 1, -1};
-        int[] dx = {0, -1, 0, 1, -1, 1, -1, 1};
-
         while (!q.isEmpty()) {
             int[] move = q.poll();
 
@@ -55,7 +63,7 @@ public class Main {
                 int moveY = move[0] + dy[i];
                 int moveX = move[1] + dx[i];
 
-                if (0 <= moveY && moveY < map.length && 0 <= moveX && moveX < map[0].length) {
+                if (inMap(moveY, moveX)) {
                     if (map[moveY][moveX] == 1 && !visited[moveY][moveX]) {
                         q.offer(new int[]{moveY, moveX});
                         visited[moveY][moveX] = true;
@@ -63,5 +71,9 @@ public class Main {
                 }
             }
         }
+    }
+
+    private static boolean inMap(int moveY, int moveX) {
+        return 0 <= moveY && moveY < map.length && 0 <= moveX && moveX < map[0].length;
     }
 }
