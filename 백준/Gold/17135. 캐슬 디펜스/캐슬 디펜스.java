@@ -1,30 +1,35 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-    static int M;
-    static int D;
-    static int answer = 0;
-    static int[][] map;
-    static int[][] originMap;
+
+    private static int N;
+    private static int M;
+    private static int D;
+    private static int answer = 0;
+    private static int[][] map;
+    private static int[][] originMap;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] info = br.readLine().split(" ");
-        N = Integer.parseInt(info[0]);
-        M = Integer.parseInt(info[1]);
-        D = Integer.parseInt(info[2]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        D = Integer.parseInt(st.nextToken());
+
         map = new int[N + 1][M + 1];
         originMap = new int[N + 1][M + 1];
+
         for (int i = 1; i <= N; i++) {
-            String[] mapInfo = br.readLine().split(" ");
+            st = new StringTokenizer(br.readLine());
             for (int j = 1; j <= M; j++) {
-                map[i][j] = Integer.parseInt(mapInfo[j-1]);
+                map[i][j] = Integer.parseInt(st.nextToken());
                 originMap[i][j] = map[i][j];
             }
         }
+
         int[] archer = new int[3];
         setArcher(1, 0, archer);
         System.out.println(answer);
@@ -85,6 +90,7 @@ public class Main {
                     visited[minY][minX] = true;
                 }
             }
+
             for (int i = 1; i <= N; i++) {
                 for (int j = 1; j <= M; j++) {
                     if (visited[i][j]) {
@@ -93,6 +99,7 @@ public class Main {
                     }
                 }
             }
+
             for (int i = N; i >= 1; i--) {
                 for (int j = 1; j <= M; j++) {
                     map[i][j] = map[i - 1][j];
