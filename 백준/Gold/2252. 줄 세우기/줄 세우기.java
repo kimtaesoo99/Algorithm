@@ -1,51 +1,58 @@
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
 
-        List<Integer>[] list = new ArrayList[n + 1];
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
 
-        for (int i = 1; i <= n; i++) {
-            list[i] = new ArrayList<>();
-        }
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < m; i++) {
-            list[sc.nextInt()].add(sc.nextInt());
-        }
+		List<Integer>[] list = new LinkedList[n + 1];
+		int[] count = new int[n + 1];
 
-        int[] inDegree = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			list[i] = new LinkedList<>();
+		}
 
-        for (int i = 1; i <= n; i++) {
-            for (int link : list[i]) {
-                inDegree[link]++;
-            }
-        }
+		for (int i = 1; i <= m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			list[from].add(to);
+			count[to]++;
+		}
 
-        Queue<Integer> q = new LinkedList<>();
+		Queue<Integer> q = new LinkedList<>();
 
-        for (int i = 1; i <= n; i++) {
-            if (inDegree[i] == 0) {
-                q.offer(i);
-            }
-        }
+		for (int i = 1; i <= n; i++) {
+			if (count[i] == 0) {
+				q.add(i);
+				sb.append(i).append(" ");
+			}
+		}
 
-        while (!q.isEmpty()) {
-            int value = q.poll();
-            System.out.print(value + " ");
+		while (!q.isEmpty()) {
+			int now = q.poll();
 
-            for (int link : list[value]) {
-                inDegree[link]--;
-                if (inDegree[link] == 0) {
-                    q.offer(link);
-                }
-            }
-        }
-    }
+			for (int next : list[now]) {
+				count[next]--;
+				if (count[next] == 0) {
+					q.offer(next);
+					sb.append(next).append(" ");
+				}
+			}
+		}
+		
+		System.out.println(sb);
+
+	}
 }
