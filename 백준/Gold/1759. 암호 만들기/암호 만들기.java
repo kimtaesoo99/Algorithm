@@ -1,31 +1,39 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int c;
-    static boolean[] visited;
-    static char[] arr;
-    static List<String> list = new ArrayList<>();
-    static List<Character> vowels = List.of('a', 'u', 'i', 'o', 'e');
 
-    public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        int l = sc.nextInt(); //자리수
-        c = sc.nextInt(); //경우의 수
+    private static final List<String> list = new ArrayList<>();
+    private static final List<Character> vowels = Arrays.asList('a', 'u', 'i', 'o', 'e');
+
+    private static int c;
+    private static boolean[] visited;
+    private static char[] arr;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int l = Integer.parseInt(st.nextToken());
+        c = Integer.parseInt(st.nextToken());
 
         visited = new boolean[c];
-
         arr = new char[c];
 
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < c; i++) {
-            arr[i] = sc.next().charAt(0);
+            arr[i] = st.nextToken().charAt(0);
         }
+
+        Arrays.sort(arr);
 
         dfs(l, "", -1);
 
         list.stream().sorted().forEach(System.out::println);
-
     }
 
     private static void dfs(int count, String result, int pre) {
