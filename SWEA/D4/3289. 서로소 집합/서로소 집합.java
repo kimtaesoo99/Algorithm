@@ -3,6 +3,9 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 class Solution {
+
+    private static int[] parents;
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
@@ -15,7 +18,7 @@ class Solution {
             int n = Integer.parseInt(st.nextToken());
             int m = Integer.parseInt(st.nextToken());
 
-            int[] parents = new int[n + 1];
+            parents = new int[n + 1];
 
             for (int i = 1; i <= n; i++) {
                 parents[i] = i;
@@ -28,9 +31,9 @@ class Solution {
                 int second = Integer.parseInt(st.nextToken());
 
                 if (command == 0) {
-                    parents[union(parents, first)] = parents[union(parents, second)];
+                    union(first, second);
                 } else {
-                    if (parents[union(parents, first)] == parents[union(parents, second)]) {
+                    if (find(first) == find(second)) {
                         sb.append(1);
                     } else {
                         sb.append(0);
@@ -42,11 +45,22 @@ class Solution {
         System.out.println(sb);
     }
 
-    private static int union(int[] parents, int now) {
+    private static int find(int now) {
         if (parents[now] == now) {
             return now;
         }
+        return parents[now] = find(parents[now]);
+    }
 
-        return parents[now] = union(parents, parents[now]);
+    private static boolean union(int a, int b) {
+        int aRoot = find(a);
+        int bRoot = find(b);
+
+        if (aRoot == bRoot) {
+            return false;
+        }
+
+        parents[bRoot] = aRoot;
+        return true;
     }
 }
