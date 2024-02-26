@@ -1,40 +1,49 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.StringTokenizer;
 
 public class Main {
-	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		Deque<int[]> stack = new ArrayDeque<>();
-		int N = Integer.parseInt(br.readLine()), score = 0;
-		int[] curTask = {0, 0};
+		int n = Integer.parseInt(br.readLine());
+		StringTokenizer st;
 		
-		for (int i = 0; i < N; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int op = Integer.parseInt(st.nextToken());
-			
-			//Add task & Store curTask to stack if curTask exists
-			if (op == 1) {
-				int A = Integer.parseInt(st.nextToken());
-				int T = Integer.parseInt(st.nextToken());
-				
-				if (curTask[1] > 0) {
-					stack.addLast(curTask);
+		Deque<Task> d = new ArrayDeque<>();
+		int result = 0;
+		
+		for(int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			if(st.nextToken().equals("0")) {
+				if(!d.isEmpty()) {
+					d.peekLast().remain--;
+					if(d.peekLast().remain == 0) {
+						result += d.pollLast().value;
+					} 
 				}
-				curTask = new int[] {A, T};
-			}
-			
-			//Restart last stored task if there is no task
-			if (curTask[1] == 0 && !stack.isEmpty()) {
-				curTask = stack.removeLast();
-			}
-			
-			//Work
-			if (curTask[1] > 0 && --curTask[1] == 0) {
-				score += curTask[0];
+			} else {
+				int value = Integer.parseInt(st.nextToken());
+				int remain = Integer.parseInt(st.nextToken());
+				if(remain == 1) {
+					result += value;
+				} else {
+					d.add(new Task(value, remain - 1));
+				}
 			}
 		}
-		System.out.println(score);
+		
+		System.out.println(result);
 	}
+}
+
+class Task {
+	int value;
+	int remain;
 	
+	public Task(int value, int remain) {
+		this.value = value;
+		this.remain = remain;
+	}
 }
