@@ -1,39 +1,48 @@
-import java.util.*;
+import java.io.*;
+import java.util.StringTokenizer;
 
-class Main{
-    static int count = -1;
-    static boolean[] visited;
-    static List<Integer>[] map;
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int line = sc.nextInt();
-        visited = new boolean[N+1];
-        map = new ArrayList[N+1];
+public class Main {
+	
+	private static int[] parent;
+	private static int[] subtreeSize;
+	
+	private static void union(int a, int b) {
+		int x = find(a), y = find(b);
+		if (x == y) {
+			return;
+		}
+		parent[Math.max(x, y)] = Math.min(x, y);
+		subtreeSize[Math.min(x, y)] = subtreeSize[x] + subtreeSize[y];
+	}
 
-        for (int i = 1; i<N+1; i++){
-            map[i] = new ArrayList<>();
-        }
-
-        for(int i = 0; i < line; i++){
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            map[a].add(b);
-            map[b].add(a);
-        }
-        getCount(1);
-        System.out.println(count);
-    }
-
-    public static void getCount(int start){
-        visited[start] = true;
-        count++;
-        for (int i = 0; i<map[start].size(); i++){
-            int y = map[start].get(i);
-            if (!visited[y]){
-                getCount(y);
-            }
-        }
-    }
+	private static int find(int x) {
+		if (parent[x] == x) return x;
+		return parent[x] = find(parent[x]);
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
+		
+		//Initialize
+		parent = new int[N + 1];
+		subtreeSize = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			parent[i] = i;
+			subtreeSize[i] = 1;
+		}
+		
+		//Union
+		for (int i = 0; i < M; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
+			union(a, b);
+		}
+		
+		System.out.println(subtreeSize[find(1)] - 1);
+	}
+	
 }
-
