@@ -1,48 +1,52 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	
-	private static int[] parent;
-	private static int[] subtreeSize;
-	
-	private static void union(int a, int b) {
-		int x = find(a), y = find(b);
-		if (x == y) {
-			return;
-		}
-		parent[Math.max(x, y)] = Math.min(x, y);
-		subtreeSize[Math.min(x, y)] = subtreeSize[x] + subtreeSize[y];
-	}
-
-	private static int find(int x) {
-		if (parent[x] == x) return x;
-		return parent[x] = find(parent[x]);
-	}
-	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		int M = Integer.parseInt(br.readLine());
 		
-		//Initialize
-		parent = new int[N + 1];
-		subtreeSize = new int[N + 1];
-		for (int i = 1; i <= N; i++) {
-			parent[i] = i;
-			subtreeSize[i] = 1;
+		int n = Integer.parseInt(br.readLine());
+		List<Integer>[] nodes = new ArrayList[n];
+		
+		for(int i = 0; i < n; i++) {
+			nodes[i] = new ArrayList<>();
 		}
 		
-		//Union
-		for (int i = 0; i < M; i++) {
+		int v = Integer.parseInt(br.readLine());
+		
+		
+		for(int i = 0; i < v; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			
-			union(a, b);
+			int from = Integer.parseInt(st.nextToken()) - 1;
+			int to = Integer.parseInt(st.nextToken()) - 1;
+			nodes[from].add(to);
+			nodes[to].add(from);
 		}
 		
-		System.out.println(subtreeSize[find(1)] - 1);
+		boolean[] visited = new boolean[n];
+		
+		back(0, nodes, visited);
+		
+		int count = -1;
+		visited[0] = true;
+		for(int i = 0; i < n; i++){
+			if(visited[i]) {
+				count++;
+			}
+		}
+		System.out.println(count);
 	}
 	
+	private static void back(int now, List<Integer>[] nodes, boolean[] visited) {
+		for(int next : nodes[now]) {
+			if(!visited[next]) {
+				visited[next]= true;
+				back(next, nodes, visited);
+			}
+		}
+	}
 }
