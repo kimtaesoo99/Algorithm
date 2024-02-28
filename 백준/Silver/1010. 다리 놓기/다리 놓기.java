@@ -1,24 +1,35 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int test = sc.nextInt();
-        for (int i = 1; i <= test; i++){
-            double n = sc.nextDouble();
-            double m = sc.nextDouble();
+public class Main {
 
-            double a = 1;
-            double b = 1;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int t = Integer.parseInt(br.readLine());
 
-            for (double j = m; j> m-n; j--){
-                a = a*j;
-            }
-            for (double j = n; j> 0; j--){
-                b = b*j;
-            }
-            double result = a/b;
-            System.out.printf("%.0f \n",result);
-        }
-    }
+		int[][] dp = new int[31][31];
+
+		dp[0][0] = 1;
+		for (int i = 1; i <= 30; i++) {
+			for (int j = 1; j <= i; j++) {
+				if (j == 1) {
+					dp[i][j] = i;
+					continue;
+				}
+				dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+			}
+		}
+		for (int test = 1; test <= t; test++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int n = Integer.parseInt(st.nextToken());
+			int m = Integer.parseInt(st.nextToken());
+			int min = Math.min(n, m);
+			int max = Math.max(n, m);
+			sb.append(dp[max][min]).append("\n");
+		}
+		System.out.println(sb);
+	}
 }
