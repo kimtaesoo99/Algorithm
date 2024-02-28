@@ -2,79 +2,84 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
-public class Main{
-    static List<Node>[] nodes;
-    static boolean[] check;
-    static int[] distance;
-    public static void main(String[] args)throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] vAndE = br.readLine().split(" ");
-        int v = Integer.parseInt(vAndE[0]);
-        int e = Integer.parseInt(vAndE[1]);
-        nodes = new ArrayList[v+1];
-        check = new boolean[v+1];
-        distance = new int[v+1];
+public class Main {
 
-        int start = Integer.parseInt(br.readLine());
-        for (int i = 0; i <= v; i++){
-            nodes[i] = new ArrayList<>();
-            distance[i] = Integer.MAX_VALUE;
-        }
+	static int V;
+	static int E;
+	static int start;
+	static List<Node>[] graph;
 
-        for (int i = 0; i < e; i++){
-            String[] info = br.readLine().split(" ");
-            int from = Integer.parseInt(info[0]);
-            int to = Integer.parseInt(info[1]);
-            int value = Integer.parseInt(info[2]);
-            nodes[from].add(new Node(to, value));
-        }
+	static class Node {
+		int idx;
+		int cost;
 
-        StringBuilder sb = new StringBuilder();
-        dij(start);
-        for (int i = 1; i <=v; i++){
-            if (distance[i] == Integer.MAX_VALUE) {
-                sb.append("INF").append("\n");
-            } else {
-                sb.append(distance[i]).append("\n");
-            }
-        }
-        System.out.println(sb);
-    }
+		Node(int idx, int cost) {
+			this.idx = idx;
+			this.cost = cost;
+		}
+	}
 
-    public static void dij(int start){
-        PriorityQueue<Node> q = new PriorityQueue<>();
-        distance[start] = 0;
-        q.offer(new Node(start,0));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		start = Integer.parseInt(br.readLine()) - 1;
+		graph = new ArrayList[V];
 
-        while (!q.isEmpty()){
-            Node poll = q.poll();
-            check[poll.link] = true;
-            for(Node now : nodes[poll.link]){
-                if (!check[now.link]){
-                    if (distance[poll.link] + now.cost < distance[now.link]){
-                        distance[now.link] = distance[poll.link] + now.cost;
-                        q.offer(new Node(now.link, distance[now.link]));
-                    }
-                }
-            }
-        }
-    }
-}
+		for (int i = 0; i < V; i++) {
+			graph[i] = new ArrayList<Node>();
+		}
 
-class Node implements Comparable<Node>{
-    public int link;
-    public int cost;
+		for (int i = 0; i < E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken()) - 1;
+			int e = Integer.parseInt(st.nextToken()) - 1;
+			int c = Integer.parseInt(st.nextToken());
+			graph[s].add(new Node(e, c));
+		}
 
-    @Override
-    public int compareTo(Node o){
-        return this.cost - o.cost;
-    }
+		int[] dist = new int[V];
 
-    public Node(int link, int cost) {
-        this.link = link;
-        this.cost = cost;
-    }
+		for (int i = 0; i < V; i++) {
+			dist[i] = Integer.MAX_VALUE;
+		}
+
+		PriorityQueue<Node> q = new PriorityQueue<Node>((o1, o2) -> Integer.compare(o1.cost, o2.cost));
+
+		q.offer(new Node(start, 0));
+		dist[start] = 0;
+
+		while (!q.isEmpty()) {
+			Node curNode = q.poll();
+
+			if (dist[curNode.idx] < curNode.cost) {
+				continue;
+			}
+
+			for (Node next : graph[curNode.idx]) {
+				if (dist[next.idx] > curNode.cost + next.cost) {
+					dist[next.idx] = curNode.cost + next.cost;
+					q.offer(new Node(next.idx, dist[next.idx]));
+				}
+			}
+		}
+
+		for (int d : dist) {
+			if (d == Integer.MAX_VALUE) {
+				sb.append("INF").append("\n");
+			} else {
+				sb.append(d).append("\n");
+			}
+		}
+
+		System.out.println(sb);
+	}
 }
