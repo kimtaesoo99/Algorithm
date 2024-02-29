@@ -1,4 +1,7 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -8,15 +11,17 @@ public class Main {
 	private static int n;
 	private static int count = 0;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		n = Integer.parseInt(br.readLine());
 
 		map = new int[n][n];
 
 		for (int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < n; j++) {
-				map[i][j] = sc.nextInt();
+				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
@@ -28,6 +33,7 @@ public class Main {
 	private static void dfs(int y, int x, int nowDir) {
 		if (y == n - 1 && x == n - 1) {
 			count++;
+			return;
 		}
 
 		for (int i = 0; i < 3; i++) {
