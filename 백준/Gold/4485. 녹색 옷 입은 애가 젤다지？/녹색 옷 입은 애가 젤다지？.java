@@ -1,72 +1,78 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
-class Main {
-    static List<Node>[] nodes;
-    static int[] distance;
-    static boolean[] check;
-    static int[] dy = {0, 1, -1, 0};
-    static int[] dx = {1, 0, 0, -1};
+public class Main {
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int testCase = 1;
-        StringBuilder sb = new StringBuilder();
+    private static int N;
+    private static int[][] map;
+    private static int[][] distance;
+    private static int[] dy = {1, 0, -1, 0};
+    private static int[] dx = {0, -1, 0, 1};
+
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        int test = 1;
+
         while (true) {
-            int n = sc.nextInt();
-            if (n == 0) {
+            N = Integer.parseInt(br.readLine());
+
+            if (N == 0) {
                 break;
             }
-            nodes = new ArrayList[n * n];
-            distance = new int[n * n];
-            check = new boolean[n * n];
-            for (int i = 0; i < n * n; i++) {
-                nodes[i] = new ArrayList<>();
-                distance[i] = Integer.MAX_VALUE;
-            }
-            int[][] map = new int[n][n];
 
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    map[i][j] = sc.nextInt();
+            map = new int[N][N];
+
+            for (int i = 0; i < N; i++) {
+                st = new StringTokenizer(br.readLine());
+                for (int j = 0; j < N; j++) {
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
 
-            int num = 0;
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    for (int k = 0; k < 4; k++) {
-                        int y = i + dy[k];
-                        int x = j + dx[k];
-                        if (0 <= y && y < n && 0 <= x && x < n) {
-                            nodes[num].add(new Node(x % n + y * n, map[y][x]));
-                        }
-                    }
-                    num++;
-                }
-            }
-            dij(0);
-            sb.append("Problem " + testCase + ": " + (distance[n * n - 1] + map[0][0]) + "\n");
-            testCase++;
+            dijkstra(map);
+
+            System.out.println("Problem " + test++ + ": " + distance[N - 1][N - 1]);
         }
-        System.out.println(sb);
     }
 
-    private static void dij(int start) {
-        PriorityQueue<Node> q = new PriorityQueue<>();
-        distance[start] = 0;
-        q.offer(new Node(start, 0));
+    private static void dijkstra(int[][] map) {
+        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o.cost));
+        pq.add(new Node(0, 0, 0));
 
-        while (!q.isEmpty()) {
-            Node cur = q.poll();
-            check[cur.num] = true;
-            for (Node next : nodes[cur.num]) {
-                if (!check[next.num]) {
-                    if (distance[cur.num] + next.link < distance[next.num]) {
-                        distance[next.num] = distance[cur.num] + next.link;
-                        q.offer(new Node(next.num, distance[next.num]));
+        distance = new int[N][N];
+
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(distance[i], 30000000);
+        }
+
+        distance[0][0] = map[0][0];
+
+        while (!pq.isEmpty()) {
+            Node pqNode = pq.poll();
+
+            int y = pqNode.y;
+            int x = pqNode.x;
+
+            if (distance[y][x] < pqNode.cost) {
+                continue;
+            }
+
+            for (int i = 0; i < 4; i++) {
+                int moveY = y + dy[i];
+                int moveX = x + dx[i];
+
+                if (0 <= moveY && moveY < N && 0 <= moveX && moveX < N) {
+                    if (distance[moveY][moveX] > distance[y][x] + map[moveY][moveX]) {
+                        distance[moveY][moveX] = distance[y][x] + map[moveY][moveX];
+                        pq.add(new Node(moveY, moveX, distance[moveY][moveX]));
                     }
                 }
             }
@@ -74,19 +80,14 @@ class Main {
     }
 }
 
-class Node implements Comparable<Node> {
-    int num;
-    int link;
+class Node {
+    int y;
+    int x;
+    int cost;
 
-    @Override
-    public int compareTo(Node node) {
-        return this.link - node.link;
-    }
-
-    public Node(int num, int link) {
-        this.num = num;
-        this.link = link;
+    public Node(int y, int x, int cost) {
+        this.y = y;
+        this.x = x;
+        this.cost = cost;
     }
 }
-
-
