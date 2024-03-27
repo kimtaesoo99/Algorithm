@@ -1,70 +1,83 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-class Main {
-    static int[][] map = new int[9][9];
+public class Main {
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    private static int count;
+    private static List<int[]> indexs = new ArrayList<>();
+    private static boolean find;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[][] map = new int[9][9];
+
         for (int i = 0; i < 9; i++) {
-            String line = sc.next();
+            String line = br.readLine();
             for (int j = 0; j < 9; j++) {
-                map[i][j] = (line.charAt(j) - '0');
-            }
-        }
-        dfs(0, 0);
-    }
-
-    private static void dfs(int y, int x) {
-        if (x == 9) {
-            dfs(y + 1, 0);
-            return;
-        }
-
-        if (y == 9) {
-            print();
-            System.exit(0);
-        }
-
-        if (map[y][x] == 0) {
-            for (int v = 1; v <= 9; v++) {
-                if (validation(y, x, v)) {
-                    map[y][x] = v;
-                    dfs(y, x + 1);
+                map[i][j] = line.charAt(j) - '0';
+                if (map[i][j] == 0) {
+                    count++;
+                    indexs.add(new int[]{i, j});
                 }
             }
-            map[y][x] = 0;
-            return;
         }
-        dfs(y, x + 1);
+
+        back(0, map);
     }
 
-    private static boolean validation(int y, int x, int value) {
-        for (int i = 0; i < 9; i++) {
-            if (map[y][i] == value) {
-                return false;
+    private static void back(int index, int[][] map) {
+        if (find) {
+            return;
+        }
+        if (index == count) {
+            for (int i = 0; i < 9; i++){
+                for (int j = 0; j < 9; j++){
+                    System.out.print(map[i][j]);
+                }
+                System.out.println();
             }
-            if (map[i][x] == value) {
+            find = true;
+            return;
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            int y = indexs.get(index)[0];
+            int x = indexs.get(index)[1];
+
+            if (checkValue(i, y, x, map)){
+                map[y][x] = i;
+                back(index + 1, map);
+                map[y][x] = 0;
+            }
+        }
+    }
+
+    private static boolean checkValue(int value, int y, int x, int[][] map) {
+        for (int i = 0; i < 9; i++){
+            if (map[i][x] == value){
                 return false;
             }
         }
-        int startY = (y / 3) * 3;
-        int startX = (x / 3) * 3;
+
+        for (int i = 0; i < 9; i++){
+            if (map[y][i] == value){
+                return false;
+            }
+        }
+
+        int startY = y / 3 * 3;
+        int startX = x / 3 * 3;
+
         for (int i = startY; i < startY + 3; i++) {
-            for (int j = startX; j < startX + 3; j++) {
-                if (map[i][j] == value) {
+            for (int j = startX; j < startX + 3; j++){
+                if (map[i][j] ==value){
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    private static void print() {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(map[i][j]);
-            }
-            System.out.println();
-        }
     }
 }
