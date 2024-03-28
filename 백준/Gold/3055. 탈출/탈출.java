@@ -1,87 +1,118 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 
 public class Main {
-    static char[][] map;
-    static int r;
-    static int c;
-    static int[] dy = {1, 0, -1, 0};
-    static int[] dx = {0, -1, 0, 1};
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        r = sc.nextInt();
-        c = sc.nextInt();
+    private static int[] dy = {1, 0, -1, 0};
+    private static int[] dx = {0, -1, 0, 1};
+    private static char[][] map;
+    private static int r;
+    private static int c;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = br.readLine().split(" ");
+        r = Integer.parseInt(line[0]);
+        c = Integer.parseInt(line[1]);
+
         map = new char[r][c];
 
-        int sY = 0;
-        int sX = 0;
+        int startY = 0;
+        int startX = 0;
+
+        Deque<int[]> deque = new ArrayDeque<>();
 
         for (int i = 0; i < r; i++) {
-            String line = sc.next();
+            String str = br.readLine();
             for (int j = 0; j < c; j++) {
-                map[i][j] = line.charAt(j);
+                map[i][j] = str.charAt(j);
                 if (map[i][j] == 'S') {
-                    sY = i;
-                    sX = j;
+                    startY = i;
+                    startX = j;
+                } else if (map[i][j] == '*') {
+                    deque.offer(new int[]{i, j, 0});
                 }
             }
         }
 
-        int result = bfs(sY, sX);
+        int result = bfs(deque, startY, startX);
+
         System.out.println(result == -1 ? "KAKTUS" : result);
     }
 
-    private static int bfs(int sY, int sX) {
-        Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{sY, sX});
-        int[][] dis = new int[r][c];
-        dis[sY][sX] = 1;
+    private static int bfs(Deque<int[]> deque, int startY, int startX) {
+        Deque<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{startY, startX, 0});
+        boolean[][] visited = new boolean[r][c];
+        visited[startY][startX] = true;
 
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                if (map[i][j] == '*') {
-                    q.offer(new int[]{i, j});
-                }
-            }
-        }
+        int nowDis = 0;
 
-        while (!q.isEmpty()) {
-            int[] move = q.poll();
-            char now = map[move[0]][move[1]];
-
-            for (int i = 0; i < 4; i++) {
-                int moveY = move[0] + dy[i];
-                int moveX = move[1] + dx[i];
-
-                if (validation(moveY, moveX)) {
-                    continue;
+        while (!q.isEmpty() || !deque.isEmpty()) {
+            while (!deque.isEmpty()) {
+                if (deque.peek()[2] != nowDis) {
+                    break;
                 }
 
-                if (now == 'S') {
-                    if (map[moveY][moveX] == 'D') {
-                        return dis[move[0]][move[1]];
+                int[] info = deque.poll();
+                int y = info[0];
+                int x = info[1];
+                int dis = info[2];
+
+                for (int i = 0; i < 4; i++) {
+                    int moveY = y + dy[i];
+                    int moveX = x + dx[i];
+
+                    if (!inMap(moveY, moveX)) {
+                        continue;
                     }
+
                     if (map[moveY][moveX] == '.') {
-                        map[moveY][moveX] = 'S';
-                        q.offer(new int[]{moveY, moveX});
-                        dis[moveY][moveX] = dis[move[0]][move[1]] + 1;
-                    }
-                }
-
-                if (now == '*') {
-                    if (map[moveY][moveX] == '.' || map[moveY][moveX] == 'S') {
                         map[moveY][moveX] = '*';
-                        q.offer(new int[]{moveY, moveX});
+                        deque.offer(new int[]{moveY, moveX, dis + 1});
                     }
                 }
             }
+
+            while (!q.isEmpty()) {
+                if (q.peek()[2] != nowDis) {
+                    break;
+                }
+
+                int[] info = q.poll();
+                int y = info[0];
+                int x = info[1];
+                int dis = info[2];
+
+                if (map[y][x] == 'D') {
+                    return dis;
+                }
+
+                for (int i = 0; i < 4; i++) {
+                    int moveY = y + dy[i];
+                    int moveX = x + dx[i];
+
+                    if (!inMap(moveY, moveX) || visited[moveY][moveX]) {
+                        continue;
+                    }
+
+                    if (map[moveY][moveX] == '.' || map[moveY][moveX] == 'D') {
+                        visited[moveY][moveX] = true;
+                        q.offer(new int[]{moveY, moveX, dis + 1});
+                    }
+                }
+            }
+            nowDis++;
         }
+
         return -1;
     }
 
-    private static boolean validation(int moveY, int moveX) {
-        return !(0 <= moveY && moveY < r && 0 <= moveX && moveX < c);
+    private static boolean inMap(int y, int x) {
+        return 0 <= y && y < r && 0 <= x && x < c;
     }
 }
