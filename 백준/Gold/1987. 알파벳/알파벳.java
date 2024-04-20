@@ -1,50 +1,47 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
-public class Main {
+class Main {
 
-    static int R, C;
-    static int[][] map;
-    static boolean[] visit = new boolean[26];
-    static int[] dx = { -1, 1, 0, 0 };
-    static int[] dy = { 0, 0, -1, 1 };
-    static int max = 0;
+    private static char[][] map;
+    private static int[] dy = {1, 0, -1, 0};
+    private static int[] dx = {0, -1, 0, 1};
+    private static int max;
 
-    public static void dfs(int x, int y, int count) {
-        if (visit[map[x][y]]) {
-            max = Math.max(max, count);
-            return;
-        } else {
-            visit[map[x][y]] = true;
-            for (int i = 0; i < 4; i++) {
-                int moveX = x + dx[i];
-                int moveY = y + dy[i];
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int r = sc.nextInt();
+        int c = sc.nextInt();
 
-                if (moveX >= 0 && moveY >= 0 && moveX < R && moveY < C) {
-                    dfs(moveX, moveY, count + 1);
-                }
+        map = new char[r][c];
 
+        for (int i = 0; i < r; i++) {
+            String line = sc.next();
+            for (int j = 0; j < c; j++) {
+                map[i][j] = line.charAt(j);
             }
-            visit[map[x][y]] = false;
-
         }
+
+        boolean[] visited = new boolean[26];
+        visited[map[0][0] - 'A'] = true;
+
+        dfs(0, 0, 1, visited);
+        System.out.println(max);
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        map = new int[R][C];
-        for (int i = 0; i < R; i++) {
-            String str = br.readLine();
-            for (int j = 0; j < C; j++) {
-                map[i][j] = str.charAt(j) - 'A';
+    private static void dfs(int y, int x, int depth, boolean[] visited) {
+        max = Math.max(max, depth);
+
+        for (int dir = 0; dir < 4; dir++) {
+            int moveY = y + dy[dir];
+            int moveX = x + dx[dir];
+
+            if (0 <= moveY && moveY < map.length && 0 <= moveX && moveX < map[0].length) {
+                if (!visited[map[moveY][moveX] - 'A']) {
+                    visited[map[moveY][moveX] - 'A'] = true;
+                    dfs(moveY, moveX, depth + 1, visited);
+                    visited[map[moveY][moveX] - 'A'] = false;
+                }
             }
         }
-        dfs(0, 0, 0);
-        System.out.println(max);
     }
 }
