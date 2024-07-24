@@ -1,56 +1,51 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.StringTokenizer;
 
 public class Main {
-
-    static char[] arr;
-    static int[] check;
-    static Stack<Character> s;
-    static Set<String> set;
+    
+    static String s;
+    static int[] used;
+    static StringBuilder result;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        result = new StringBuilder();
 
-        StringBuilder result = new StringBuilder();
-        int n = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < n; i++) {
-            set = new TreeSet<>();
-            check = new int[26];
-            s = new Stack<>();
-            arr = br.readLine().toCharArray();
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
 
-            for (char c : arr) {
-                check[c - 'a']++;
+            s = st.nextToken();
+            used = new int['z' - 'a' + 1];
+
+            for (int j = 0; j < s.length(); j++) {
+                int index = s.charAt(j) - 'a';
+                used[index]++;
             }
 
-            back(arr.length);
-            set.forEach(s -> result.append(s).append("\n"));
+            backtrack(new StringBuilder());
         }
 
         System.out.println(result);
     }
 
-    static void back(int r) {
-        if (r == s.size()) {
-            StringBuilder sb = new StringBuilder();
-            for (char c : s) {
-                sb.append(c);
-            }
-            set.add(sb.toString());
+    static void backtrack(StringBuilder sb) {
+        if (sb.length() == s.length()) {
+            result.append(sb).append("\n");
+            return;
         }
 
-        for (int i = 0; i < 26; i++) {
-            if (check[i] > 0) {
-                check[i]--;
-                s.push((char) (i + 'a'));
-                back(r);
-                s.pop();
-                check[i]++;
+        for (int i = 0; i < 'z' - 'a' + 1; i++) {
+            if (used[i] > 0) {
+                sb.append((char) ('a' + i));
+                used[i]--;
+                backtrack(sb);
+                used[i]++;
+                sb.deleteCharAt(sb.length() - 1);
             }
         }
     }
