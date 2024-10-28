@@ -1,36 +1,46 @@
-import java.util.*;
+import java.util.Scanner;
 
-class Main{
-    static int[] chess;
-    static int count = 0;
-    public static void main(String[] args){
+class Main {
+
+    private static int result;
+
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        chess = new int[N];
+        int n = sc.nextInt();
 
-        getResult(0);
-        System.out.println(count);
+        int[] chess = new int[n];
+        back(chess, 0);
+
+        System.out.println(result);
     }
 
-    public static void getResult(int y){
-        if(y == chess.length){
-            count++;
+    private static void back(int[] chess, int depth) {
+        if (depth == chess.length) {
+            result++;
             return;
         }
-        for(int i = 0; i< chess.length; i++){
-            chess[y] = i;
-            if(canSet(y)){
-                getResult(y+1);
+
+        for (int i = 0; i < chess.length; i++) {
+            chess[depth] = i;
+            if (check(chess, depth, i)) {
+                back(chess, depth + 1);
             }
         }
     }
 
-    public static boolean canSet(int y){
-        for(int i = 0; i < y; i++){
-            if(chess[i] == chess[y])return false;
-            else if(Math.abs(y - i) == Math.abs(chess[y]- chess[i]))return false;
-
+    private static boolean check(int[] chess, int depth, int index) {
+        for (int i = 0; i < depth; i++) {
+            if (index == chess[i]) {
+                return false;
+            }
         }
+
+        for (int i = 0; i < depth; i++) {
+            if (Math.abs(chess[i] - index) == Math.abs(i - depth)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
